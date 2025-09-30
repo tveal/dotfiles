@@ -29,7 +29,7 @@ function buildGitconfig() {
     find "$DOTFILES_DIR" -type f -name '*.gitconfig' | while read -r filename; do
         echo "# >>> $filename" >> "$BUILD_GITCONFIG"
         cat "$filename" >> "$BUILD_GITCONFIG"
-        echo "# <<< $filename" >> "$BUILD_GITCONFIG"
+        echo -e "\n# <<< $filename" >> "$BUILD_GITCONFIG"
     done
 }
 

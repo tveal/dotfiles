@@ -17,6 +17,7 @@ function main() {
     backupRunCommands
     buildRunCommands
     installRunCommands
+    installScripts
 }
 
 function backupRunCommands() {
@@ -35,7 +36,7 @@ function buildRunCommands() {
         if [ -f "$filename" ]; then
             echo "# >>> $filename" >> "$RC_FILE"
             cat "$filename" >> "$RC_FILE"
-            echo "# <<< $filename" >> "$RC_FILE"
+            echo -e "\n# <<< $filename" >> "$RC_FILE"
         fi
     done
 }
@@ -65,6 +66,22 @@ function installRunCommands() {
             cp "$file" "$file.bak.$(date +"%Y%m%d_%H%M%S")"
             echo -e "\n# Added by dotfiles rc-install\nsource \"$SRC_FILE\"" >> "$file"
             echo "Added sourcing of $SRC_FILE to $file"
+        fi
+    done
+}
+
+# Copies all shell scripts from the dotfiles 'scripts' directories to the build/scripts directory,
+# makes them executable, and prints a message for each copied script.
+# Note: Name collisions will overwrite previous files and subdirectory structure is not preserved.
+# Usage: Call installScripts to update build/scripts with the latest scripts.
+function installScripts() {
+    mkdir -p "$BUILD_DIR/scripts"
+    find ~/.dotfiles -type f -path '*/scripts/*.sh' | while read -r filename; do
+        if [ -f "$filename" ]; then
+            local destFile="$BUILD_DIR/scripts/$(basename "$filename")"
+            cp "$filename" "$destFile"
+            chmod +x "$destFile"
+            echo "Copied and made executable: $destFile"
         fi
     done
 }
