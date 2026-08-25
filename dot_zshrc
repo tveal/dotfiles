@@ -1,0 +1,83 @@
+# enable zsh history
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=60000
+SAVEHIST=50000
+
+setopt HIST_IGNORE_SPACE # do not save a command if it starts with a space
+setopt HIST_IGNORE_DUPS  # do not save duplicate commands
+
+# solve weird extra character issues when auto completing
+export LANG="en_US.UTF-8"
+
+# add user local completion folder to fpath
+fpath+=(~/.zsh/completion)
+
+if [[ -d "$HOME/.local/bin" ]] ; then 
+  export PATH=$HOME/.local/bin:$PATH
+fi
+
+# if local brew install
+if [[ -d "$HOME/code/brew/bin" ]] ; then
+  export PATH="$HOME/code/brew/bin:$PATH"
+fi
+
+if command -v mise > /dev/null ; then
+  eval "$(mise activate zsh)"
+fi
+
+autoload -Uz compinit && compinit
+
+# (neo)vim
+if command -v nvim > /dev/null ; then
+  export EDITOR="nvim"
+  export VISUAL="nvim"
+elif command -v vim > /dev/null ; then
+  export EDITOR="vim"
+  export VISUAL="vim"
+fi
+
+if command -v lsd > /dev/null ; then
+  alias ls="lsd"
+  alias ll="lsd -lgh"
+  alias la='lsd -a'
+  alias lla='lsd -lgha'
+  alias lt='lsd --tree'
+fi
+
+# enable zsh vi-mode
+bindkey -v
+export KEYTIMEOUT=1 # make switching between modes faster
+
+# enable the starship prompt
+if command -v starship > /dev/null ; then
+  eval "$(starship init zsh)"
+fi
+# enable fzf autocompletion and key-bindings if found
+if command -v fzf > /dev/null ; then
+  source <(fzf --zsh)
+fi
+
+# if zoxide is installed, enable it
+if command -v zoxide > /dev/null ; then
+  eval "$(zoxide init zsh)"
+  alias cd="z"
+fi
+
+## use bat instead of cat 
+if command -v bat > /dev/null ; then
+  alias cat="bat"
+fi
+
+## bat on debian based systems is batcat. Fix that.
+if command -v batcat > /dev/null ; then
+  alias cat="batcat"
+fi
+
+if [[ -d .zsh/zsh-autosuggestions ]] ; then
+  source .zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# syntax highlighting needs to be at the end because of reasons
+if [[ -d .zsh/zsh-syntax-highlighting ]] ; then
+  source .zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi

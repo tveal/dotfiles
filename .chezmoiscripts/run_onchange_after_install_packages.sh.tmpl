@@ -1,0 +1,39 @@
+#!/bin/bash
+# packages hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+set -euo pipefail
+
+if ! command -v mise &> /dev/null && [[ ! -f "{{ .chezmoi.homeDir }}/.local/bin/mise" ]]; then
+  echo "Installing mise..."
+  curl https://mise.run | sh
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "{{ .chezmoi.homeDir }}/.profile"
+  export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
+fi
+
+if command -v mise &> /dev/null; then
+  MISE_BIN_PATH="mise"
+elif [[ -f "{{ .chezmoi.homeDir }}/.local/bin/mise" ]]; then
+  MISE_BIN_PATH="{{ .chezmoi.homeDir }}/.local/bin/mise"
+else
+  echo "ERROR: mise not installed" >&2
+  exit 1
+fi
+
+$MISE_BIN_PATH trust {{ .chezmoi.homeDir }}/.config/mise
+$MISE_BIN_PATH install
+
+eval "$($MISE_BIN_PATH activate bash)"
+
+if command -v herdr > /dev/null ; then
+  if [[ -z "$(herdr plugin list | grep thanhdat77/herdr-navigator)" ]] > /dev/null ; then
+    herdr plugin install thanhdat77/herdr-navigator -y
+  else
+    echo "Skipped herdr-navigator plugin install; already installed."
+  fi
+else
+  echo "WARNING: herdr not found."
+fi
+
+echo "All set. Load a new terminal/zsh"
+echo "  OR run: source ~/.zshrc"
+

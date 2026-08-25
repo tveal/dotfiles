@@ -1,0 +1,29 @@
+onboarding = false
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[keys]
+previous_workspace = "prefix+("
+next_workspace = "prefix+)"
+
+[experimental]
+kitty_graphics = true
+
+
+#########################################
+# Navigator Plugin
+
+[[keys.command]]
+key = "prefix+t"
+type = "plugin_action"
+# command = "fullerzz.sesh.open-picker"
+command = "herdr-navigator.open"
+description = "jump to anything"
+
+[[keys.command]]
+key = "prefix+l"
+type = "plugin_action"
+# command = "fullerzz.sesh.last"
+command = "herdr-navigator.jump-back"
+description = "jump to previous workspace"
