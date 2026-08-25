@@ -21,6 +21,10 @@ if [[ -d "$HOME/code/brew/bin" ]] ; then
   export PATH="$HOME/code/brew/bin:$PATH"
 fi
 
+if [[ -d "$HOME/.config/bin" ]] ; then
+  export PATH="$HOME/.config/bin:$PATH"
+fi
+
 if command -v mise > /dev/null ; then
   eval "$(mise activate zsh)"
 fi

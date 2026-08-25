@@ -1,6 +1,7 @@
 [tools]
 ast-grep = "latest"
 bat = "latest"
+chezmoi = "latest"
 eza = "latest"
 fd = "latest"
 fzf = "latest"
