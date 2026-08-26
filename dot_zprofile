@@ -1,0 +1,4 @@
+
+if [[ -f "$HOME/.config/shell/env.sh" ]] ; then
+  builtin source "$HOME/.config/shell/env.sh"
+fi

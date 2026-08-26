@@ -25,6 +25,10 @@ if [[ -d "$HOME/.config/bin" ]] ; then
   export PATH="$HOME/.config/bin:$PATH"
 fi
 
+if [[ -f "$HOME/.config/shell/aliases.sh" ]] ; then
+  builtin source "$HOME/.config/shell/aliases.sh"
+fi
+
 if command -v mise > /dev/null ; then
   eval "$(mise activate zsh)"
 fi
