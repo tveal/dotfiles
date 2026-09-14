@@ -1,3 +1,6 @@
+-- DISABLE by uncommenting the following line
+-- if true then return {} end
+
 return {
   -- enable search on hidden files
   "folke/snacks.nvim",
