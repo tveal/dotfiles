@@ -24,8 +24,8 @@ return {
       local c = config.counters[to]
       local step
       if c >= 4 then step = 10
-      elseif c == 3 then step = 4
-      elseif c == 2 then step = 2
+      -- elseif c == 3 then step = 4
+      -- elseif c == 2 then step = 2
       else step = 1 end
 
       vim.schedule(function()

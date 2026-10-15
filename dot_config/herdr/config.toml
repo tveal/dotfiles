@@ -22,7 +22,7 @@ command = "herdr-navigator.open"
 description = "jump to anything"
 
 [[keys.command]]
-key = "prefix+l"
+key = "prefix+/"
 type = "plugin_action"
 # command = "fullerzz.sesh.last"
 command = "herdr-navigator.jump-back"
