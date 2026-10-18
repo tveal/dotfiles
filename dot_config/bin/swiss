@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -f "$PWD/swiss" ]] ; then
+  "$PWD/swiss" "$@"
+  exit 0
+fi
+
+function help() {
+  echo
+  echo "   ______       ________________"
+  echo "  / ___/ |     / /  _/ ___/ ___/"
+  echo "  \__ \| | /| / // / \__ \\__ \ "
+  echo " ___/ /| |/ |/ // / ___/ /__/ /"
+  echo "/____/ |__/|__/___//____/____/"
+  echo "Swiss Army Tool"
+  echo
+  echo "Usage:"
+  echo "  $(basename "$0") <action> [...]"
+  echo
+  echo "Actions:"
+  echo "  help          Display the help"
+  echo
+  echo "  seed          Create 'swiss' in current directory"
+  echo
+  echo
+}
+
+function main() {
+  local action="${1:-"help"}"
+  doAction "$action"
+}
+
+function doAction() {
+  local action="$1"
+
+  case "$action" in
+  "") help | less ;;
+  help) help | less ;;
+  seed) seedCwd ;;
+  *)
+    echo "ERR: unrecognized action: '$action'"
+    exit 83
+    ;;
+  esac
+}
+
+function seedCwd() {
+  if [[ -f "$PWD/swiss" ]] ; then
+    echo "ERROR: $PWD/swiss already exists."
+    exit 27
+  fi
+  echo "$NEW_SWISS_SCRIPT" > "$PWD/swiss"
+  chmod +x "$PWD/swiss"
+  echo "✔ Created $PWD/swiss"
+}
+
+NEW_SWISS_SCRIPT=$(cat << 'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+function help() {
+  echo
+  echo "   ______       ________________"
+  echo "  / ___/ |     / /  _/ ___/ ___/"
+  echo "  \__ \| | /| / // / \__ \\__ \ "
+  echo " ___/ /| |/ |/ // / ___/ /__/ /"
+  echo "/____/ |__/|__/___//____/____/"
+  echo "Swiss Army Tool"
+  echo
+  echo "Usage:"
+  echo "  $(basename "$0") <action> [...]"
+  echo
+  echo "Actions:"
+  echo "  help          Display the help"
+  echo
+  echo "  build         Your project build cmd"
+  echo
+  echo
+}
+
+function main() {
+  local action="${1:-"help"}"
+  doAction "$action"
+}
+
+function doAction() {
+  local action="$1"
+
+  case "$action" in
+  "") help | less ;;
+  help) help | less ;;
+  build) buildCmd ;;
+  *)
+    echo "ERR: unrecognized action: '$action'"
+    exit 83
+    ;;
+  esac
+}
+
+function buildCmd() {
+  echo "replace-me"
+}
+
+main "$@"
+EOF
+)
+
+main "$@"
+
