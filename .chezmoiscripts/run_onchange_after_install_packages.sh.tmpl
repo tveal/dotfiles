@@ -3,26 +3,19 @@
 
 set -euo pipefail
 
-if ! command -v mise &> /dev/null && [[ ! -f "{{ .chezmoi.homeDir }}/.local/bin/mise" ]]; then
-  echo "Installing mise..."
+MISE_INSTALL_PATH="${MISE_INSTALL_PATH:-$HOME/.local/bin/mise}"
+MISE_BIN_DIR="$(dirname "$MISE_INSTALL_PATH")"
+export PATH="$MISE_BIN_DIR:$PATH"
+
+if [ ! -f "$MISE_INSTALL_PATH" ]; then
   curl https://mise.run | sh
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> "{{ .chezmoi.homeDir }}/.profile"
-  export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
 fi
 
-if command -v mise &> /dev/null; then
-  MISE_BIN_PATH="mise"
-elif [[ -f "{{ .chezmoi.homeDir }}/.local/bin/mise" ]]; then
-  MISE_BIN_PATH="{{ .chezmoi.homeDir }}/.local/bin/mise"
-else
-  echo "ERROR: mise not installed" >&2
-  exit 1
-fi
+"$MISE_INSTALL_PATH" trust {{ .chezmoi.homeDir }}/.config/mise
+"$MISE_INSTALL_PATH" install
+"$MISE_INSTALL_PATH" reshim
 
-$MISE_BIN_PATH trust {{ .chezmoi.homeDir }}/.config/mise
-$MISE_BIN_PATH install
-
-eval "$($MISE_BIN_PATH activate bash)"
+eval "$($MISE_INSTALL_PATH activate bash)"
 
 if command -v herdr > /dev/null ; then
   if [[ -z "$(herdr plugin list | grep thanhdat77/herdr-navigator)" ]] > /dev/null ; then

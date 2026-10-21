@@ -27,10 +27,12 @@ This will apply all dotfiles to your home directory and install mise with all it
 - **chezmoi apply**: Apply dotfiles to your home directory
 - **chezmoi update**: Pull and apply latest changes
 
-To setup, [install chezmoi](https://www.chezmoi.io/install/), then run
+To setup these dotfiles with chezmoi, run
 
 ```sh
-chezmoi init https://github.com/$GITHUB_USERNAME/dotfiles.git
+export PATH="$HOME/.local/bin:$PATH" && \
+curl https://mise.run | sh && \
+mise exec chezmoi -- chezmoi init --apply https://github.com/$GITHUB_USERNAME/dotfiles.git
 ```
 
 ### test in docker
@@ -48,4 +50,11 @@ Run the setup to test in clean environment
 
 ```sh
 ./setup
+```
+
+OR (_remove `--source` flag to test only committed code_)
+```bash
+export PATH="$HOME/.local/bin:$PATH" && \
+curl https://mise.run | sh && \
+mise exec chezmoi -- chezmoi init --apply --source $PWD
 ```
